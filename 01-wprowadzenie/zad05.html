@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      input {
+        padding: 5px;
+      }
+      div {
+        border: 1px solid black;
+        padding: 25px;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <form>
+      <label for="title">Title <span style="color: red">*</span></label>
+      <br />
+      <input type="text" style="width: 600px" />
+
+      <br />
+
+      <label for="date">Date</label>
+      <br />
+      <input type="date" />
+      <p>Date-only description.</p>
+
+      <div>
+        <h5>DATE/TIME</h5>
+        <input type="date" />
+        <input type="time" />
+        <p>Date and time description.</p>
+      </div>
+
+      <div>
+        <h5>DATE RANGE</h5>
+
+        <div>
+          <h5>START DATE</h5>
+          <input type="date" />
+          <input type="time" />
+        </div>
+
+        <div>
+          <h5>END DATE</h5>
+          <input type="date" />
+          <input type="time" />
+        </div>
+
+        <p>Date range description.</p>
+      </div>
+
+      <div>
+        <h5>DATE/TIME LIST</h5>
+        <select name="year" id="year">
+          <option value="Year">Year</option>
+        </select>
+
+        <select name="month" id="month">
+          <option value="Month">Month</option>
+        </select>
+
+        <select name="day" id="day">
+          <option value="Day">Day</option>
+        </select>
+
+        <select name="hour" id="hour">
+          <option value="Hour">Hour</option>
+        </select>
+
+        <select name="minute" id="minute">
+          <option value="Minute">Minute</option>
+        </select>
+
+        <p>Date / time list description.</p>
+      </div>
+    </form>
+  </body>
+</html>
