@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import AddForm from './components/AddForm';
@@ -14,6 +13,15 @@ export interface Product {
   image: string;
 }
 
+const productSchema = z.object({
+  id: z.number().min(1),
+  title: z.string(),
+  price: z.number(),
+  category: z.string(),
+  description: z.string(),
+  image: z.string(),
+});
+
 const App = () => {
   const [products, setProducts] = useState<Product[]>([]);
 
@@ -25,21 +33,9 @@ const App = () => {
         const res = await fetch('https://fakestoreapi.com/products', {
           signal: controller.signal,
         });
-
         const data = await res.json();
 
-        const productsSchema = z.array(
-          z.object({
-            id: z.number().min(1),
-            title: z.string(),
-            price: z.number(),
-            category: z.string(),
-            description: z.string(),
-            image: z.string().url(),
-          }),
-        );
-
-        setProducts(productsSchema.parse(data));
+        setProducts(z.array(productSchema).parse(data));
       } catch (e) {
         console.error(e);
       }
@@ -63,7 +59,7 @@ const App = () => {
       if (res.ok) {
         const product = await res.json();
 
-        setProducts([...products, product]);
+        setProducts([...products, productSchema.parse(product)]);
       }
     } catch (e) {
       console.error(e);
