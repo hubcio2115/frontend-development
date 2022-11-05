@@ -22,9 +22,11 @@ const App = () => {
 
     (async () => {
       try {
-        const res = await axios.get('https://fakestoreapi.com/products', {
+        const res = await fetch('https://fakestoreapi.com/products', {
           signal: controller.signal,
         });
+
+        const data = await res.json();
 
         const productsSchema = z.array(
           z.object({
@@ -37,7 +39,7 @@ const App = () => {
           }),
         );
 
-        setProducts(productsSchema.parse(res.data));
+        setProducts(productsSchema.parse(data));
       } catch (e) {
         console.error(e);
       }
@@ -50,10 +52,18 @@ const App = () => {
 
   const onSubmit = async (data: FromSchemaType) => {
     try {
-      const res = await axios.post('https://fakestoreapi.com/products', data);
+      const res = await fetch('https://fakestoreapi.com/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-      if (res.status === 200) {
-        setProducts([...products, res.data]);
+      if (res.ok) {
+        const product = await res.json();
+
+        setProducts([...products, product]);
       }
     } catch (e) {
       console.error(e);
