@@ -1,0 +1,6 @@
+- packages:
+  - '01-wprowadzenie'
+  - '02-javascript-powtorka'
+  - '03-wstep-do-reacta'
+  - '04-state-management'
+  - '05-use-effect/**'
