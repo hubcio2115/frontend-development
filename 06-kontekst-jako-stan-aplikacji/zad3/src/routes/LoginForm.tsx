@@ -1,14 +1,14 @@
 import { type FormEvent, Reducer, useReducer, useState } from 'react';
-import { FormContext } from './context/FormContext';
 import {
-  type FormAction,
-  type FormMessage,
-  formSchema,
-  FormErrors,
-  FormState,
-} from './types/form';
-import accounts from './data/accounts.json';
-import Form from './components/Form';
+  type LoginFormAction,
+  type LoginFormMessage,
+  loginFormSchema,
+  LoginFormErrors,
+  LoginFormState,
+} from '../types/loginForm';
+import { LoginFormContext } from '../context/LoginFormContext';
+import accounts from '../data/accounts.json';
+import Input from '../components/LoginInput';
 
 const formInitialState = {
   values: {
@@ -21,13 +21,13 @@ const formInitialState = {
   },
 };
 
-const App = () => {
-  const [formMessage, setFormMessage] = useState<FormMessage>('');
-
-  const formReducer: Reducer<FormState, FormAction> = (
-    formState: FormState,
+const LoginForm = () => {
+  const [LoginFormMessage, setLoginFormMessage] =
+    useState<LoginFormMessage>('');
+  const formReducer: Reducer<LoginFormState, LoginFormAction> = (
+    formState: LoginFormState,
     action,
-  ): FormState => {
+  ): LoginFormState => {
     switch (action.type) {
       case 'email':
       case 'password':
@@ -52,8 +52,8 @@ const App = () => {
     formInitialState,
   );
 
-  const validate = (what: FormErrors) => {
-    const parseOutput = formSchema.shape.values.shape[what].safeParse(
+  const validate = (what: LoginFormErrors) => {
+    const parseOutput = loginFormSchema.shape.values.shape[what].safeParse(
       formState.values[what],
     );
 
@@ -74,12 +74,12 @@ const App = () => {
     e.preventDefault();
 
     Object.keys(formState.values).forEach((key) => {
-      validate(key as FormErrors);
+      validate(key as LoginFormErrors);
     });
 
     if (
       Object.keys(formState.errors).reduce((acc, el) => {
-        if (formState.errors[el as keyof FormState['errors']] !== '')
+        if (formState.errors[el as keyof LoginFormState['errors']] !== '')
           return false;
         return acc;
       }, true)
@@ -91,23 +91,33 @@ const App = () => {
             account.password === formState.values.password,
         )
       )
-        setFormMessage('Login Successful :D');
-      else setFormMessage('Login Unsuccessful :(');
+        setLoginFormMessage('Login Successful :D');
+      else setLoginFormMessage('Login Unsuccessful :(');
     }
   };
-
   return (
-    <FormContext.Provider
+    <LoginFormContext.Provider
       value={{
         formState,
         formStateDispatch,
         validate,
       }}
     >
-      <Form handleSubmit={handleSubmit} />
-      <p>{formMessage}</p>
-    </FormContext.Provider>
+      <form onSubmit={handleSubmit}>
+        <Input name="email" type="text" placeholder="email" required />
+
+        <Input
+          name="password"
+          type="password"
+          placeholder="password"
+          required
+        />
+
+        <button type="submit">Submit</button>
+      </form>
+      <p>{LoginFormMessage}</p>
+    </LoginFormContext.Provider>
   );
 };
 
-export default App;
+export default LoginForm;
