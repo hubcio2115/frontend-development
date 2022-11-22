@@ -22,7 +22,10 @@ const Input = (props: InputProps) => {
   const { formState, formStateDispatch, validate } =
     useContext(RegisterFormContext)!;
 
-  const handleChange = (action: RegisterFormActionTypes, value: string) => {
+  const handleChange = (
+    action: RegisterFormActionTypes,
+    value: string | Date,
+  ) => {
     formStateDispatch({ type: action, payload: value });
   };
 
@@ -35,10 +38,18 @@ const Input = (props: InputProps) => {
     <div>
       <input
         {...props}
-        value={formState.values[props.name]?.toString()}
+        value={
+          props.name === 'birthday'
+            ? formState.values.birthday.toISOString().slice(0, 10)
+            : formState.values[props.name]?.toString()
+        }
         onChange={(e) => {
           if (isTouched) validate(props.name);
-          handleChange(props.name, e.target.value);
+
+          handleChange(
+            props.name,
+            !!e.target.valueAsDate ? e.target.valueAsDate : e.target.value,
+          );
         }}
         onBlur={() => {
           if (!isTouched) setIsTouched(true);

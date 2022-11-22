@@ -31,4 +31,6 @@ export interface LoginFormAction {
 export type LoginFormMessage =
   | ''
   | 'Login Successful :D'
-  | 'Login Unsuccessful :(';
+  | 'Login Unsuccessful :('
+  | 'There is no such account'
+  | 'Wrong password';

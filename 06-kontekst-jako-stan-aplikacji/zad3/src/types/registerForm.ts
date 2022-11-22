@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z, ZodLazy } from 'zod';
 
 export const registerFormSchema = z.object({
   values: z.object({
@@ -19,7 +19,6 @@ export const registerFormSchema = z.object({
     birthday: z
       .date({ required_error: 'Provided date is of wrong form' })
       .max(new Date(), 'Date has to be earlier than today'),
-    profilePhoto: z.string().optional(),
     acceptTermsCheckbox: z.boolean(),
   }),
   errors: z.object({
@@ -28,7 +27,6 @@ export const registerFormSchema = z.object({
     emailError: z.string(),
     passwordError: z.string(),
     birthdayError: z.string(),
-    profilePhotoError: z.string(),
     acceptTermsCheckboxError: z.string(),
   }),
 });
@@ -41,17 +39,28 @@ export type RegisterFormErrors = keyof RegisterFormValues;
 const RegisterFormActionTypesEnum = z.enum([
   ...registerFormSchema.shape.values.keyof().options,
   ...registerFormSchema.shape.errors.keyof().options,
+  'reset',
 ]);
+
 export type RegisterFormActionTypes = z.infer<
   typeof RegisterFormActionTypesEnum
 >;
 
 export interface RegisterFormAction {
   type: RegisterFormActionTypes;
-  payload: string;
+  payload: any;
+}
+
+export interface Account {
+  name: string;
+  surname: string;
+  password: string;
+  birthday: string;
+  email: string;
 }
 
 export type RegisterFormMessage =
   | ''
   | 'Register Successful :D'
-  | 'Register Unsuccessful :(';
+  | 'Register Unsuccessful :('
+  | 'There is another account with the same email';

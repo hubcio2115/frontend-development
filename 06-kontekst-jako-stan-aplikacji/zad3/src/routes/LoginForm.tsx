@@ -1,4 +1,10 @@
-import { type FormEvent, Reducer, useReducer, useState } from 'react';
+import {
+  type FormEvent,
+  Reducer,
+  useReducer,
+  useState,
+  useEffect,
+} from 'react';
 import {
   type LoginFormAction,
   type LoginFormMessage,
@@ -7,8 +13,8 @@ import {
   LoginFormState,
 } from '../types/loginForm';
 import { LoginFormContext } from '../context/LoginFormContext';
-import accounts from '../data/accounts.json';
 import Input from '../components/LoginInput';
+import { Account } from '../types/registerForm';
 
 const formInitialState = {
   values: {
@@ -24,6 +30,19 @@ const formInitialState = {
 const LoginForm = () => {
   const [LoginFormMessage, setLoginFormMessage] =
     useState<LoginFormMessage>('');
+  const [account, setAccount] = useState<Account | null>(null);
+
+  // useEffect(() => {
+  //   if (!!account?.profilePhoto) {
+  //     const profilePhotoParts = account.profilePhoto.split(',');
+  //     const fileFormat = profilePhotoParts[0].split(';')[1];
+  //     const fileContent = profilePhotoParts[1];
+  //     const file = new File([fileContent], 'profilePhoto', {
+  //       type: fileFormat,
+  //     });
+  //   } else setProfilePicture('');
+  // }, [account]);
+
   const formReducer: Reducer<LoginFormState, LoginFormAction> = (
     formState: LoginFormState,
     action,
@@ -84,15 +103,17 @@ const LoginForm = () => {
         return acc;
       }, true)
     ) {
-      if (
-        accounts.some(
-          (account) =>
-            account.email === formState.values.email &&
-            account.password === formState.values.password,
-        )
-      )
-        setLoginFormMessage('Login Successful :D');
-      else setLoginFormMessage('Login Unsuccessful :(');
+      const accountFromStorage = localStorage.getItem(formState.values.email);
+
+      if (accountFromStorage === null) {
+        setLoginFormMessage('There is no such account');
+      } else {
+        const account: Account = JSON.parse(accountFromStorage);
+
+        if (account.password === formState.values.password) {
+          setAccount(account);
+        } else setLoginFormMessage('Wrong password');
+      }
     }
   };
   return (
@@ -116,6 +137,29 @@ const LoginForm = () => {
         <button type="submit">Submit</button>
       </form>
       <p>{LoginFormMessage}</p>
+
+      {!!account ? (
+        <table>
+          <tbody>
+            <tr>
+              <th>name</th>
+              <td>{account.name}</td>
+            </tr>
+            <tr>
+              <th>surname</th>
+              <td>{account.surname}</td>
+            </tr>
+            <tr>
+              <th>email</th>
+              <td>{account.email}</td>
+            </tr>
+            <tr>
+              <th>birthday</th>
+              <td>{account.birthday.slice(0, 10)}</td>
+            </tr>
+          </tbody>
+        </table>
+      ) : null}
     </LoginFormContext.Provider>
   );
 };

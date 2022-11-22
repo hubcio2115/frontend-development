@@ -1,4 +1,10 @@
-import { type FormEvent, Reducer, useReducer, useState } from 'react';
+import {
+  type FormEvent,
+  Reducer,
+  useReducer,
+  useState,
+  useEffect,
+} from 'react';
 import {
   type RegisterFormAction,
   type RegisterFormMessage,
@@ -7,7 +13,6 @@ import {
   RegisterFormState,
 } from '../types/registerForm';
 import { RegisterFormContext } from '../context/RegisterFormContext';
-import accounts from '../data/accounts.json';
 import Input from '../components/RegisterInput';
 
 const formInitialState: RegisterFormState = {
@@ -17,7 +22,6 @@ const formInitialState: RegisterFormState = {
     email: '',
     password: '',
     birthday: new Date(),
-    profilePhoto: '',
     acceptTermsCheckbox: false,
   },
   errors: {
@@ -26,26 +30,34 @@ const formInitialState: RegisterFormState = {
     emailError: '',
     passwordError: '',
     birthdayError: '',
-    profilePhotoError: '',
     acceptTermsCheckboxError: '',
   },
 };
 
 const RegisterForm = () => {
   const [formMessage, setFormMessage] = useState<RegisterFormMessage>('');
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const formReducer: Reducer<RegisterFormState, RegisterFormAction> = (
     formState: RegisterFormState,
     action,
   ): RegisterFormState => {
     switch (action.type) {
+      case 'name':
+      case 'surname':
       case 'email':
       case 'password':
+      case 'birthday':
+      case 'acceptTermsCheckbox':
         return {
           ...formState,
           values: { ...formState.values, [action.type]: action.payload },
         };
+      case 'nameError':
+      case 'surnameError':
       case 'emailError':
       case 'passwordError':
+      case 'birthdayError':
+      case 'acceptTermsCheckboxError':
         return {
           ...formState,
           errors: {
@@ -53,6 +65,8 @@ const RegisterForm = () => {
             [action.type]: action.payload,
           },
         };
+      case 'reset':
+        return formInitialState;
       default:
         return formState;
     }
@@ -62,6 +76,19 @@ const RegisterForm = () => {
     formReducer,
     formInitialState,
   );
+
+  const checkFormValidity = () =>
+    Object.keys(formState.errors).reduce((acc, el) => {
+      if (formState.errors[el as keyof RegisterFormState['errors']] !== '')
+        return false;
+      return acc;
+    }, true) &&
+    Object.keys(formState.values).reduce((acc, el) => {
+      if (formState.values[el as keyof RegisterFormState['values']] === '') {
+        return false;
+      }
+      return acc;
+    }, true);
 
   const validate = (what: RegisterFormErrors) => {
     const parseOutput = registerFormSchema.shape.values.shape[what].safeParse(
@@ -78,9 +105,14 @@ const RegisterForm = () => {
         type: `${what}Error`,
         payload: '',
       });
+
+    if (checkFormValidity()) setIsSubmitDisabled(false);
+    else setIsSubmitDisabled(true);
   };
 
-  const resetForm = () => {};
+  const resetForm = () => {
+    formStateDispatch({ type: 'reset', payload: '' });
+  };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -89,24 +121,18 @@ const RegisterForm = () => {
       validate(key as RegisterFormErrors);
     });
 
-    if (
-      Object.keys(formState.errors).reduce((acc, el) => {
-        if (formState.errors[el as keyof RegisterFormState['errors']] !== '')
-          return false;
-        return acc;
-      }, true)
-    ) {
-      if (
-        accounts.some(
-          (account) =>
-            account.email === formState.values.email &&
-            account.password === formState.values.password,
-        )
-      )
+    if (checkFormValidity())
+      if (!!localStorage.getItem(formState.values.email)) {
+        setFormMessage('There is another account with the same email');
+      } else {
+        const { acceptTermsCheckbox, ...rest } = formState.values;
+        localStorage.setItem(formState.values.email, JSON.stringify(rest));
+
         setFormMessage('Register Successful :D');
-      else setFormMessage('Register Unsuccessful :(');
-    }
+      }
+    else setFormMessage('Register Unsuccessful :(');
   };
+
   return (
     <RegisterFormContext.Provider
       value={{
@@ -157,12 +183,36 @@ const RegisterForm = () => {
           style={{ width: '100%' }}
         />
 
-        <Input name="birthday" type="date" required style={{ width: '100%' }} />
+        <Input
+          name="birthday"
+          type="date"
+          required
+          style={{ width: '100%' }}
+          max={new Date().toISOString().slice(0, 10)}
+        />
 
-        <input name="profilePhoto" type="file" style={{ width: '100%' }} />
+        <label htmlFor="termsAndCondition">Accept terms & conditions</label>
+        <input
+          name="termsAndCondition"
+          type="checkbox"
+          value={formState.values.acceptTermsCheckbox.toString()}
+          onChange={(e) => {
+            formStateDispatch({
+              type: 'acceptTermsCheckbox',
+              payload: e.target.checked,
+            });
+          }}
+        />
 
-        <button type="submit">Submit</button>
-        <button type="button">Reset</button>
+        <button
+          disabled={isSubmitDisabled || !formState.values.acceptTermsCheckbox}
+          type="submit"
+        >
+          Submit
+        </button>
+        <button onClick={resetForm} type="button">
+          Reset
+        </button>
       </form>
       <p>{formMessage}</p>
     </RegisterFormContext.Provider>
