@@ -147,27 +147,6 @@ importers:
       typescript: 4.8.4
       vite: 3.2.3
 
-  07-formik/zad1:
-    specifiers:
-      '@types/react': ^18.0.24
-      '@types/react-dom': ^18.0.8
-      '@vitejs/plugin-react': ^2.2.0
-      formik: ^2.2.9
-      react: ^18.2.0
-      react-dom: ^18.2.0
-      typescript: ^4.6.4
-      vite: ^3.2.3
-    dependencies:
-      formik: 2.2.9_react@18.2.0
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    devDependencies:
-      '@types/react': 18.0.25
-      '@types/react-dom': 18.0.8
-      '@vitejs/plugin-react': 2.2.0_vite@3.2.3
-      typescript: 4.8.4
-      vite: 3.2.3
-
   07-formik/zad3:
     specifiers:
       '@types/react': ^18.0.24
@@ -192,6 +171,31 @@ importers:
       sass: 1.56.1
       typescript: 4.8.4
       vite: 3.2.3_sass@1.56.1
+
+  07-formik/zad4:
+    specifiers:
+      '@types/react': ^18.0.24
+      '@types/react-dom': ^18.0.8
+      '@vitejs/plugin-react': ^2.2.0
+      formik: ^2.2.9
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      typescript: ^4.6.4
+      vite: ^3.2.3
+      yup: ^0.32.11
+      zod: ^3.19.1
+    dependencies:
+      formik: 2.2.9_react@18.2.0
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      yup: 0.32.11
+      zod: 3.19.1
+    devDependencies:
+      '@types/react': 18.0.25
+      '@types/react-dom': 18.0.8
+      '@vitejs/plugin-react': 2.2.0_vite@3.2.3
+      typescript: 4.8.4
+      vite: 3.2.3
 
 packages:
 
@@ -594,7 +598,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.19.6_@babel+core@7.19.6
       magic-string: 0.26.7
       react-refresh: 0.14.0
-      vite: 3.2.3_sass@1.56.1
+      vite: 3.2.3
     transitivePeerDependencies:
       - supports-color
     dev: true
