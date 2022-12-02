@@ -218,6 +218,27 @@ importers:
       typescript: 4.8.4
       vite: 3.2.3
 
+  08-react-router/zad2:
+    specifiers:
+      '@types/react': ^18.0.24
+      '@types/react-dom': ^18.0.8
+      '@vitejs/plugin-react': ^2.2.0
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      react-router-dom: ^6.4.4
+      typescript: ^4.6.4
+      vite: ^3.2.3
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      react-router-dom: 6.4.4_biqbaboplfbrettd7655fr4n2y
+    devDependencies:
+      '@types/react': 18.0.25
+      '@types/react-dom': 18.0.8
+      '@vitejs/plugin-react': 2.2.0_vite@3.2.3
+      typescript: 4.8.4
+      vite: 3.2.3
+
 packages:
 
   /@ampproject/remapping/2.2.0:
