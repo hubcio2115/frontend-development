@@ -11,28 +11,33 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: '/about',
+    path: 'about',
     element: <h1>about</h1>,
   },
   {
-    path: '/services',
+    path: 'services',
     element: <h1>services</h1>,
   },
   {
-    path: '/contact',
-    element: <h1>contact</h1>,
-  },
-  {
-    path: '/contact/us',
-    element: <h1>contact/us</h1>,
-  },
-  {
-    path: '/contact/pl',
-    element: <h1>contact/pl</h1>,
-  },
-  {
-    path: '/contact/de',
-    element: <h1>contact/de</h1>,
+    path: 'contact',
+    children: [
+      {
+        index: true,
+        element: <h1>contact</h1>,
+      },
+      {
+        path: 'us',
+        element: <h1>contact/us</h1>,
+      },
+      {
+        path: 'pl',
+        element: <h1>contact/pl</h1>,
+      },
+      {
+        path: 'de',
+        element: <h1>contact/de</h1>,
+      },
+    ],
   },
 ]);
 
