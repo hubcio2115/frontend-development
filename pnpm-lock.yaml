@@ -260,6 +260,12 @@ importers:
       typescript: 4.8.4
       vite: 3.2.3
 
+  09-redux:
+    specifiers:
+      zod: ^3.19.1
+    dependencies:
+      zod: 3.19.1
+
 packages:
 
   /@ampproject/remapping/2.2.0:
