@@ -1,0 +1,17 @@
+{
+  "name": "lab10-zad1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.ja",
+  "type": "commonjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.9.1",
+    "zod": "^3.19.1"
+  }
+}
